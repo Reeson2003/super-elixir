@@ -1,0 +1,36 @@
+Домашку сюда -
+lyubov.zhuravleva@binomo.com
+тема - Введение в Elixir. Домашняя работа №1
+и напишите что для вашего дз надо скачать и как запускать
+Домашнее задание номер 2
+Входные данные
+list = [{:alica, "female"}, {:makar, "male"}, {:kostya, "male"}, {:zhenya, "male"}, {:sasha, "female"}, {:anton, "male"}, {:larisa, "female"}, {:slava, "male"}, {:olga, "female"}, {:vika, "female"}, {:kseniya, "female"}]
+Задания
+1) Всех учеников у кого имя заканчивается на "a " поместить в класс "A" остальных в "B"
+Выходные данные
+Map вида %{"class_a": [], "class_b":[]}
+2) Всех девочек в класс A, мальчиков в класс B
+Выходные данные
+Map вида %{"class_a": [], "class_b":[]}
+3) Используя результат из 2 пункта, каждой третьей девочке присвоить что она любит алгебру, остальным геометрию
+Выходные данные
+Map вида %{"lesya": "algerba",...}
+Подсказки
+Чтобы получить лист, воспользуйтесь данной функцией
+foldr(list, acc, fun)
+foldr([elem], acc, (elem, acc -> acc)) :: acc when elem: var, acc: var
+Folds (reduces) the given list from the right with a function. Requires an accumulator.
+Examples
+List.foldr([1, 2, 3, 4], 0, fn x, acc -> x - acc end)
+-2
+Используйте для соединения с асс " List.wrap(acc) ++ список который вы хотите присоединить"
+Как и для определения начала есть функция для конца String.ends_with?(string)
+Атом в строку Atom.to_string
+Чтобы добавить в map
+put(map, key, value)
+put(map(), key(), value()) :: map()
+Puts the given value under key in map.
+Examples
+Map.put(%{a: 1}, :c, 2)
+%{a: 1, c: 2}
+Все оформить функциями в модуле Super (edited)

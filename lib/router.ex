@@ -11,6 +11,24 @@ defmodule Super.Router do
 
   get "/:name/who_am_i" do
     IO.inspect("Свое имя забыл #{name}")
+    send_resp(conn, 200, "Ok")
+  end
+
+  get "/test/add" do
+    send(:calc, {:add})
+    send_resp(conn, 200, "Ok")
+  end
+
+  get "/test/reset" do
+    send(:calc, {:reset})
+    send_resp(conn, 200, "Ok")
+  end
+
+  get "/test/get" do
+    send(:calc, {:get, self})
+    receive do
+      total -> send_resp(conn, 200, Integer.to_string(total))
+    end
   end
 
   match _ do
