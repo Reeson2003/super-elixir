@@ -42,8 +42,25 @@ defmodule Super do
 
 
   #{:alica, "female"}
+
+  def ends_with_a(list) do
+    sort(
+      list,
+      %{"class_a" => [], "class_b" => []},
+      fn element ->
+        {name, _} = element
+        name = Atom.to_string(name)
+        if String.ends_with?(name, "a") do
+          "class_a"
+        else
+          "class_b"
+        end
+      end
+    )
+  end
+
   def girls_to_a_boys_to_b(list) do
-    Super.sort(
+    sort(
       list,
       %{"class_a" => [], "class_b" => []},
       fn element -> case element do
@@ -54,20 +71,20 @@ defmodule Super do
     )
   end
 
-  def sort(list, map, predicate) do
+  defp sort(list, map, sorting_fn) do
     if Enum.empty?(list) do
       map
     else
-      Super.sort(
+      sort(
         List.delete(list, List.first(list)),
-        Super.put(List.first(list), predicate.(List.first(list)), map),
-        predicate
+        put(map, sorting_fn.(List.first(list)), List.first(list)),
+        sorting_fn
       )
     end
   end
 
-  def put(element, key, map) do
-    Map.put(map, key, List.wrap(Map.get(map, key)) ++ [element])
+  defp put(map, key, value) do
+    Map.put(map, key, List.wrap(Map.get(map, key)) ++ [value])
   end
 
 end
