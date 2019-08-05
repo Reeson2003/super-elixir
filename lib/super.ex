@@ -41,35 +41,17 @@ defmodule Super do
   end
 
   def ends_with_a_to_a(list) do
-    ends_with_a = Enum.filter(
-      list,
-      fn pupil ->
-        ends_with_a?(pupil)
-      end
-    )
-    not_ends_with_a = Enum.filter(
-      list,
-      fn pupil ->
-        !ends_with_a?(pupil)
-      end
-    )
-    %{"class_a" => ends_with_a, "class_b" => not_ends_with_a}
+    sort(list, fn {key, _} -> String.ends_with?(Atom.to_string(key), "a") end)
   end
 
   def girls_to_a_boys_to_b(list) do
-    girls = Enum.filter(
-      list,
-      fn pupil ->
-        female?(pupil)
-      end
-    )
-    boys = Enum.filter(
-      list,
-      fn pupil ->
-        !female?(pupil)
-      end
-    )
-    %{"class_a" => girls, "class_b" => boys}
+    sort(list, fn {_, value} -> value == "female" end)
+  end
+
+  defp sort(list, sort_fn) do
+    class_a = Enum.filter(list, sort_fn)
+    class_b = Enum.reject(list, sort_fn)
+    %{"class_a" => class_a, "class_b" => class_b}
   end
 
   def girls_love_maths(list) do
@@ -78,8 +60,8 @@ defmodule Super do
     List.foldl(
       girls,
       %{},
-      fn girl, map ->
-        name = name_as_string(girl)
+      fn {name, _}, map ->
+        name = Atom.to_string(name)
         if rem(Map.size(map) + 1, 3) == 0 do
           Map.put(map, name, "algebra")
         else
@@ -87,23 +69,6 @@ defmodule Super do
         end
       end
     )
-  end
-
-  defp ends_with_a?(pupil) do
-    name = name_as_string(pupil)
-    String.ends_with?(name, "a")
-  end
-
-  defp name_as_string(pupil) do
-    {name, _} = pupil
-    Atom.to_string(name)
-  end
-
-  defp female?(pupil) do
-    case pupil do
-      {_, "female"} -> true
-      {_, _} -> false
-    end
   end
 
 end
