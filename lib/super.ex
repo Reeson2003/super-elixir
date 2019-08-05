@@ -80,7 +80,7 @@ defmodule Super do
       %{},
       fn girl, map ->
         name = name_as_string(girl)
-        if Map.size(map) > 0 && rem(Map.size(map), 2) == 0 do
+        if rem(Map.size(map) + 1, 3) == 0 do
           Map.put(map, name, "algebra")
         else
           Map.put(map, name, "geometry")
