@@ -41,31 +41,35 @@ defmodule Super do
   end
 
   def ends_with_a_to_a(list) do
-    sort(
+    ends_with_a = Enum.filter(
       list,
-      %{"class_a" => [], "class_b" => []},
       fn pupil ->
-        {name, _} = pupil
-        name = Atom.to_string(name)
-        if String.ends_with?(name, "a") do
-          "class_a"
-        else
-          "class_b"
-        end
+        ends_with_a?(pupil)
       end
     )
+    not_ends_with_a = Enum.filter(
+      list,
+      fn pupil ->
+        !ends_with_a?(pupil)
+      end
+    )
+    %{"class_a" => ends_with_a, "class_b" => not_ends_with_a}
   end
 
   def girls_to_a_boys_to_b(list) do
-    sort(
+    girls = Enum.filter(
       list,
-      %{"class_a" => [], "class_b" => []},
-      fn pupil -> case pupil do
-                    {_, "female"} -> "class_a"
-                    {_, "male"} -> "class_b"
-                  end
+      fn pupil ->
+        female?(pupil)
       end
     )
+    boys = Enum.filter(
+      list,
+      fn pupil ->
+        !female?(pupil)
+      end
+    )
+    %{"class_a" => girls, "class_b" => boys}
   end
 
   def girls_love_maths(list) do
@@ -75,8 +79,7 @@ defmodule Super do
       girls,
       %{},
       fn girl, map ->
-        {name, _} = girl
-        name = Atom.to_string(name)
+        name = name_as_string(girl)
         if Map.size(map) > 0 && rem(Map.size(map), 2) == 0 do
           Map.put(map, name, "algebra")
         else
@@ -86,22 +89,21 @@ defmodule Super do
     )
   end
 
-  defp sort(list, map, sorting_fn) do
-    if Enum.empty?(list) do
-      map
-    else
-      next = List.first(list)
-      sort(
-        List.delete(list, next),
-        put(map, sorting_fn.(next), next),
-        sorting_fn
-      )
-    end
+  defp ends_with_a?(pupil) do
+    name = name_as_string(pupil)
+    String.ends_with?(name, "a")
   end
 
-  defp put(map, key, value) do
-    list = Map.get(map, key)
-    Map.put(map, key, List.wrap(list) ++ [value])
+  defp name_as_string(pupil) do
+    {name, _} = pupil
+    Atom.to_string(name)
+  end
+
+  defp female?(pupil) do
+    case pupil do
+      {_, "female"} -> true
+      {_, _} -> false
+    end
   end
 
 end
