@@ -1,19 +1,19 @@
 defmodule Timer do
-  def start_link do
-    Task.start_link(fn -> loop([]) end)
+
+  def delay(pid, millis) do
+    Task.start(fn -> loop(pid, :os.system_time(:millisecond) + millis) end)
   end
 
-  def loop(subscribers) do
-    receive do
-      {:subscribe, {pid, time}} -> loop(subscribers ++ {pid, time})
-      #      {:unsubscribe, pid} -> loop(subscribers -- {pid, _})
+  defp loop(pid, timeout) do
+    if :os.system_time(:millisecond) > timeout do
+      notify(pid)
+    else
+      loop(pid, timeout)
     end
-    notify subscribers
   end
 
-  def notify(subscribers) do
-    now = :os.system_time(:millisecond)
-    Enum.each(subscribers, fn subscriber -> IO.inspect subscriber end)
-    loop subscribers
+  defp notify(pid) do
+    send(pid, :timeout)
   end
+
 end

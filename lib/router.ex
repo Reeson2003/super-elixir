@@ -15,12 +15,20 @@ defmodule Super.Router do
   end
 
   get "/test/add" do
-    send(:calc, {:add})
-    send_resp(conn, 200, "Ok")
+    receive do
+      :timeout -> IO.inspect("timeout")
+                  send(:calc, {:get, self})
+                  receive do
+                    total -> send_resp(conn, 200, Integer.to_string(total))
+                  end
+    after 0 -> send(:calc, {:add})
+               send_resp(conn, 200, "Ok")
+    end
   end
 
   get "/test/reset" do
     send(:calc, {:reset})
+    Timer.delay(self, 10000)
     send_resp(conn, 200, "Ok")
   end
 

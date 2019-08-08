@@ -13,7 +13,7 @@ import static java.time.format.DateTimeFormatter.ISO_TIME;
 
 public class App {
 
-    private static final long DURATION = Duration.ofSeconds(3).toMillis();
+    private static final long DURATION = Duration.ofMinutes(3).toMillis();
 
     private static final int PROCESSORS = Runtime.getRuntime().availableProcessors() * 2;
 
