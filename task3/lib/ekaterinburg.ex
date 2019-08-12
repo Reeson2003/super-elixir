@@ -9,17 +9,14 @@ defmodule Ekaterinburg do
   end
 
   def loop(state) do
-    loop(
-      receive do
-        {:add, data} -> handle_message(data, state)
-        {:read} -> handle_message(state)
-      end
-    )
+    state = receive do
+      add = {:add, _} -> handle_message(add, state)
+      read = {:read} -> handle_message(read, state)
+    end
+    loop(state)
   end
 
-  def handle_message(name, state) do
-    accept = Map.get(state, :accept)
-    reject = Map.get(state, :reject)
+  def handle_message({:add, name}, %{:accept => accept, :reject => reject} = state) do
     if String.contains?(name, "hram") do
       IO.puts("Добавить нельзя  #{name}")
       Map.put(state, :reject, List.wrap(reject) ++ [name])
@@ -29,9 +26,7 @@ defmodule Ekaterinburg do
     end
   end
 
-  def handle_message(state) do
-    accept = Map.get(state, :accept)
-    reject = Map.get(state, :reject)
+  def handle_message({:read}, %{:accept => accept, :reject => reject} = state) do
     IO.puts("В Екатеринбурге сейчас есть #{Enum.join(accept, ", ")} Пытались добавить #{Enum.join(reject, ", ")} ")
     state
   end
